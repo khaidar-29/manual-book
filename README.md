@@ -1,4 +1,4 @@
-# Panduan Belajar Laravel dari Nol
+# Panduan Belajar Laravel
 
 Panduan lengkap mempelajari framework PHP modern. Cocok untuk pemula maupun siapa pun yang ingin mulai membangun aplikasi web dengan Laravel.
 
