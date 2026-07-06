@@ -1,6 +1,22 @@
-# Tutorial Laravel Lengkap
+# Panduan Belajar Laravel dari Nol
 
-Panduan lengkap belajar Laravel dari nol. Cocok untuk pemula maupun siapa pun yang ingin mempelajari framework PHP modern.
+Panduan lengkap mempelajari framework PHP modern. Cocok untuk pemula maupun siapa pun yang ingin mulai membangun aplikasi web dengan Laravel.
+
+---
+
+## Modul Pembelajaran
+
+Ikuti modul berikut secara berurutan. Setiap modul berisi langkah-langkah praktik yang bisa dikerjakan langsung.
+
+| Modul | Topik | Estimasi |
+|---|---|---|
+| [01 — Setup](./01-setup/README.md) | Install & jalankan Laravel | 1–2 hari |
+| [02 — MVC Dasar](./02-mvc-dasar/README.md) | Route, Controller, Blade | 2–3 hari |
+| [03 — Database](./03-database/README.md) | Migration, Model, Seeder | 2–3 hari |
+| [04 — CRUD Task](./04-crud-task/README.md) | Create, Read, Update, Delete | 3–4 hari |
+| [05 — Authentication](./05-auth/README.md) | Login & Register | 2–3 hari |
+
+**Total estimasi:** ±2 minggu
 
 ---
 
