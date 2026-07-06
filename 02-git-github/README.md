@@ -1,6 +1,6 @@
 # Modul 02 — Git & GitHub
 
-Memahami Git dan menghubungkan project **Task Manager** ke GitHub.
+Modul kedua: memahami Git dan menghubungkan project **Task Manager** ke GitHub.
 
 **Estimasi waktu:** 1 hari  
 **Prasyarat:** [Modul 01 — Setup](../01-setup/README.md)
@@ -9,58 +9,103 @@ Memahami Git dan menghubungkan project **Task Manager** ke GitHub.
 
 ## Tujuan Modul
 
-- [ ] Paham konsep Git (commit, branch, push)
-- [ ] Repo GitHub dibuat & terhubung
-- [ ] Project di-push ke GitHub
-- [ ] Paham workflow commit per modul
+Setelah modul ini selesai, kamu sudah bisa:
+
+- [ ] Memahami konsep Git (working directory, staging, commit, push)
+- [ ] Mengkonfigurasi identitas Git
+- [ ] Membuat repository di GitHub
+- [ ] Menghubungkan project lokal ke GitHub
+- [ ] Push perubahan ke GitHub
+- [ ] Memahami workflow `add → commit → push` yang dipakai setiap modul
+
+---
+
+## Mengapa Git Penting?
+
+Git mencatat **setiap perubahan** kode kamu. Manfaatnya:
+
+- Bisa kembali ke versi sebelumnya jika ada kesalahan
+- Riwayat kerja terdokumentasi otomatis
+- Kode bisa di-backup ke GitHub (cloud)
+- Kolaborasi tim jadi lebih mudah
 
 ---
 
 ## Konsep Git
 
 ```
-Working Directory  →  git add  →  Staging  →  git commit  →  Local Repo
-                                                                  ↓
-                                                            git push
-                                                                  ↓
-                                                            GitHub (Remote)
+┌─────────────────┐     git add      ┌─────────────┐     git commit     ┌─────────────┐
+│ Working         │  ──────────────► │  Staging    │  ────────────────► │  Local Repo │
+│ Directory       │                  │  Area       │                    │  (.git)     │
+│ (file kamu)     │                  │  (siap commit)                   │             │
+└─────────────────┘                  └─────────────┘                    └──────┬──────┘
+                                                                                  │
+                                                                             git push
+                                                                                  │
+                                                                                  ▼
+                                                                         ┌─────────────┐
+                                                                         │  GitHub     │
+                                                                         │  (remote)   │
+                                                                         └─────────────┘
 ```
+
+### Istilah penting
 
 | Istilah | Arti |
 |---|---|
-| **Repository (repo)** | Folder project + riwayat perubahan |
-| **Commit** | Snapshot perubahan dengan pesan |
-| **Branch** | Cabang kerja terpisah |
-| **Push** | Kirim commit ke GitHub |
-| **Pull** | Ambil update dari GitHub |
+| **Repository (repo)** | Folder project + seluruh riwayat perubahan |
+| **Commit** | Snapshot (foto) kode pada satu titik waktu + pesan |
+| **Push** | Kirim commit dari komputer ke GitHub |
+| **Pull** | Ambil update terbaru dari GitHub |
+| **Remote** | Versi repo di server (GitHub) |
+| **Origin** | Nama default remote (GitHub) |
 
 ---
 
-## Langkah 1: Konfigurasi Git (sekali saja)
+## Langkah 1: Konfigurasi Git (Sekali Saja)
+
+Set identitas kamu — dipakai di setiap commit:
 
 ```bash
 git config --global user.name "Nama Kamu"
 git config --global user.email "email@example.com"
 ```
 
-Pastikan email sama dengan akun GitHub.
+Verifikasi:
+
+```bash
+git config --global user.name
+git config --global user.email
+```
+
+> Email sebaiknya sama dengan email akun GitHub.
 
 ---
 
-## Langkah 2: Buat Repo di GitHub
+## Langkah 2: Buat Repository di GitHub
 
 1. Login ke [github.com](https://github.com)
-2. Klik **New repository**
-3. Nama: `task-manager`
-4. Visibility: **Public** atau **Private**
-5. **Jangan** centang "Add README" (project lokal sudah ada)
-6. Klik **Create repository**
+2. Klik tombol **+** → **New repository**
+3. Isi form:
+   - **Repository name:** `task-manager`
+   - **Description:** `Aplikasi manajemen task — belajar Laravel`
+   - **Visibility:** Public atau Private
+   - **Jangan centang** "Add a README file" (project lokal sudah ada)
+4. Klik **Create repository**
+
+GitHub akan menampilkan instruksi push — kita kerjakan di langkah berikutnya.
 
 ---
 
-## Langkah 3: Hubungkan & Push
+## Langkah 3: Hubungkan Project ke GitHub
 
-Di folder project `task-manager`:
+Masuk ke folder project Laravel:
+
+```bash
+cd ~/projects/task-manager
+```
+
+Hubungkan ke remote GitHub (ganti `USERNAME`):
 
 ```bash
 git remote add origin https://github.com/USERNAME/task-manager.git
@@ -68,136 +113,153 @@ git branch -M main
 git push -u origin main
 ```
 
-Ganti `USERNAME` dengan username GitHub kamu.
+### Jika diminta login GitHub
 
-Jika diminta login, gunakan **Personal Access Token** sebagai password (bukan password akun).
+GitHub **tidak menerima password akun** untuk push via HTTPS. Pakai **Personal Access Token (PAT)** sebagai password.
 
-### Buat Personal Access Token
-
-1. GitHub → Settings → Developer settings → Personal access tokens
-2. Generate new token (classic)
-3. Centang scope `repo`
-4. Copy token, simpan — dipakai saat push
+**Cara buat PAT:**
+1. GitHub → **Settings** → **Developer settings**
+2. **Personal access tokens** → **Tokens (classic)**
+3. **Generate new token (classic)**
+4. Centang scope **`repo`**
+5. Generate → **copy token** (hanya muncul sekali!)
+6. Saat `git push` diminta password → paste token
 
 ---
 
-## Langkah 4: Verifikasi
+## Langkah 4: Verifikasi Push Berhasil
 
-Refresh halaman repo di GitHub — semua file project harus sudah tampil.
+1. Refresh halaman repo di GitHub
+2. Semua file project harus sudah tampil
+3. Di terminal:
 
 ```bash
-git remote -v        # Cek remote URL
-git log --oneline    # Lihat riwayat commit
-git status           # Harus "nothing to commit, working tree clean"
+git remote -v
+git log --oneline
+git status
 ```
 
+`git status` harus: `nothing to commit, working tree clean`
+
 ---
 
-## Langkah 5: Workflow Branch
+## Langkah 5: Workflow Git — Setiap Modul
 
-Setiap modul baru, kerjakan di branch terpisah:
+**Ini workflow yang dipakai di modul 03–08.** Tidak perlu buat branch atau merge Pull Request.
 
 ```bash
-# Buat branch untuk modul 03
-git checkout main
-git pull origin main
-git checkout -b modul/03-routing-controller
+# 1. Kerjakan coding sesuai modul...
 
-# ... coding ...
+# 2. Cek perubahan
+git status
+git diff
 
+# 3. Stage semua perubahan
 git add .
-git commit -m "feat: tambah route dan controller halaman tentang"
-git push -u origin modul/03-routing-controller
+
+# 4. Commit dengan pesan jelas
+git commit -m "feat: tambah halaman tentang"
+
+# 5. Push ke GitHub
+git push
 ```
 
-Setelah selesai, buat **Pull Request** di GitHub → merge ke `main`.
-
-> Untuk pembelajaran solo, boleh push langsung ke `main`. Tapi latihan pakai branch + PR sangat disarankan.
+Selesai. Langsung push ke branch `main`.
 
 ---
 
 ## Konvensi Commit Message
 
-Format: `tipe: deskripsi singkat`
+Format: **`tipe: deskripsi singkat`**
 
 | Tipe | Kapan dipakai | Contoh |
 |---|---|---|
 | `feat` | Fitur baru | `feat: tambah halaman tentang` |
 | `fix` | Perbaikan bug | `fix: perbaiki validasi form task` |
-| `docs` | Dokumentasi | `docs: update readme` |
-| `chore` | Setup/config | `chore: initial laravel setup` |
-| `refactor` | Ubah struktur kode | `refactor: pisah logic ke service` |
+| `docs` | Dokumentasi | `docs: tambah readme project` |
+| `chore` | Setup/konfigurasi | `chore: initial laravel setup` |
+| `refactor` | Ubah struktur tanpa ubah fungsi | `refactor: pisahkan logic ke controller` |
+
+**Tips menulis commit message:**
+- Pakai bahasa Indonesia atau Inggris — konsisten saja
+- Deskripsikan **apa** yang berubah, bukan **bagaimana**
+- Contoh buruk: `update file`
+- Contoh bagus: `feat: tambah migration tabel tasks`
 
 ---
 
 ## Perintah Git yang Sering Dipakai
 
 ```bash
-git status                  # Lihat file berubah
-git diff                    # Lihat detail perubahan
-git add .                   # Stage semua perubahan
-git add app/Models/Task.php # Stage file tertentu
-git commit -m "pesan"       # Commit
-git push                    # Push ke GitHub
-git pull                    # Ambil update dari GitHub
-git log --oneline -10       # 10 commit terakhir
-git checkout -b nama-branch # Buat & pindah branch
-git checkout main           # Pindah ke branch main
-git stash                   # Simpan perubahan sementara
-git stash pop               # Kembalikan perubahan
+git status                    # File apa saja yang berubah?
+git diff                      # Detail perubahan baris per baris
+git add .                     # Stage semua perubahan
+git add app/Models/Task.php   # Stage satu file saja
+git commit -m "pesan"         # Simpan snapshot
+git push                      # Kirim ke GitHub
+git pull                      # Ambil update dari GitHub
+git log --oneline             # Riwayat commit (ringkas)
+git log --oneline -10         # 10 commit terakhir
 ```
 
 ---
 
 ## Latihan Modul 02
 
-1. Buat repo GitHub `task-manager`
-2. Push project dari Modul 01 ke GitHub
-3. Buat branch `modul/02-git-github`
-4. Buat file `README.md` di root project dengan isi:
+### Latihan 1: Push project Modul 01
+
+Jika belum push di Modul 01:
+
+```bash
+git add .
+git commit -m "chore: initial laravel setup"
+git push -u origin main
+```
+
+### Latihan 2: Tambah README project
+
+Buat file `README.md` di root project `task-manager/`:
 
 ```markdown
 # Task Manager
 
 Aplikasi manajemen task — project belajar Laravel.
 
+## Fitur (Progress)
+- [x] Setup Laravel + MySQL
+- [ ] Routing & Controller
+- [ ] Blade + Bootstrap
+- [ ] Database & CRUD
+- [ ] Authentication
+- [ ] Dashboard & Kategori
+
 ## Tech Stack
 - Laravel 12
-- Blade + Bootstrap 5
-- MySQL
+- MySQL 8
+- Blade + Bootstrap 5 (CDN)
+
+## Cara Menjalankan
+1. Clone repo
+2. `composer install`
+3. Copy `.env.example` ke `.env`, sesuaikan database
+4. `php artisan key:generate`
+5. `php artisan migrate`
+6. `php artisan serve`
 ```
 
-5. Commit & push:
+Commit & push:
 
 ```bash
 git add README.md
-git commit -m "docs: tambah readme project"
-git push -u origin modul/02-git-github
+git commit -m "docs: tambah readme project task manager"
+git push
 ```
 
-6. Buat Pull Request di GitHub, merge ke `main`
-7. Di local: `git checkout main && git pull origin main`
+### Latihan 3: Lihat riwayat di GitHub
 
----
-
-## Template Git di Setiap Modul Berikutnya
-
-Di modul 03–08, ulangi pola ini di akhir setiap modul:
-
-```bash
-git checkout main
-git pull origin main
-git checkout -b modul/XX-nama-modul
-
-# ... kerjakan latihan modul ...
-
-git add .
-git commit -m "feat: deskripsi perubahan modul ini"
-git push -u origin modul/XX-nama-modul
-
-# Buat PR di GitHub → merge → pull main
-git checkout main && git pull origin main
-```
+1. Buka repo di GitHub
+2. Klik tab **Commits**
+3. Pastikan 2 commit tampil: initial setup + readme
 
 ---
 
@@ -206,10 +268,10 @@ git checkout main && git pull origin main
 | Masalah | Solusi |
 |---|---|
 | `remote origin already exists` | `git remote set-url origin URL_BARU` |
-| Push ditolak (rejected) | `git pull origin main` dulu, lalu push lagi |
-| `could not read Username` | Pakai Personal Access Token, bukan password |
-| Commit ke branch salah | `git checkout main` lalu buat branch baru |
-| `.env` ikut ke-commit | `git rm --cached .env` — pastikan ada di `.gitignore` |
+| `failed to push — rejected` | `git pull origin main` dulu, lalu `git push` lagi |
+| `could not read Username` | Pakai Personal Access Token sebagai password |
+| `.env` ikut ke-commit | Pastikan `.env` ada di `.gitignore`. Jalankan `git rm --cached .env` |
+| `git push` minta login terus | Simpan credential: `git config --global credential.helper store` |
 
 ---
 
@@ -217,10 +279,21 @@ git checkout main && git pull origin main
 
 - [ ] Git config (name & email) sudah di-set
 - [ ] Repo GitHub `task-manager` dibuat
+- [ ] Remote origin terhubung
 - [ ] Project ter-push ke GitHub
-- [ ] Bisa buat branch, commit, push
+- [ ] README project ditambahkan dan di-push
+- [ ] Paham workflow: `git add .` → `commit` → `push`
 - [ ] Paham konvensi commit message
-- [ ] (Opsional) Pull Request pertama berhasil di-merge
+
+---
+
+## Git — Commit & Push Modul 02
+
+```bash
+git add .
+git commit -m "docs: setup git github dan tambah readme project"
+git push
+```
 
 ---
 

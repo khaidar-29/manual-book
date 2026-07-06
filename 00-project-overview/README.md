@@ -1,6 +1,6 @@
 # Modul 00 — Project Overview
 
-Gambaran **Task Manager App** — project yang akan kamu bangun dari nol sampai selesai.
+Gambaran lengkap **Task Manager App** — project yang akan kamu bangun dari awal sampai selesai.
 
 **Estimasi waktu:** 30 menit (baca & pahami)  
 **Prasyarat:** Tidak ada
@@ -9,119 +9,149 @@ Gambaran **Task Manager App** — project yang akan kamu bangun dari nol sampai 
 
 ## Apa itu Task Manager App?
 
-Aplikasi web sederhana untuk mengelola daftar task (to-do). User bisa login, membuat task, menandai selesai, dan mengelompokkan task berdasarkan kategori.
+Task Manager adalah aplikasi web untuk mengelola daftar pekerjaan (task/to-do). User bisa mendaftar, login, lalu membuat dan mengelola task miliknya sendiri.
+
+Project ini **bukan** kumpulan latihan terpisah. Kamu membangun **satu aplikasi** yang terus dilengkapi setiap modul.
 
 ---
 
-## Fitur Akhir (Modul 08)
+## Fitur Akhir (Setelah Modul 08)
 
-```
-Task Manager App
-│
-├── 🌐 Halaman Publik
-│   ├── Beranda
-│   └── Tentang
-│
-├── 🔐 Authentication
-│   ├── Register
-│   ├── Login
-│   └── Logout
-│
-├── 📋 Task Management (per user)
-│   ├── Lihat daftar task
-│   ├── Tambah task
-│   ├── Edit task
-│   ├── Hapus task
-│   └── Tandai selesai
-│
-├── 📊 Dashboard
-│   ├── Total task
-│   ├── Task selesai vs belum
-│   └── Task per kategori
-│
-└── 🏷️ Kategori
-    ├── Work, Personal, Study, dll.
-    └── Filter task by kategori
-```
+### Halaman Publik (tanpa login)
+- **Beranda** — pengenalan aplikasi
+- **Tentang** — informasi project
+
+### Authentication
+- **Register** — daftar akun baru
+- **Login** — masuk ke aplikasi
+- **Logout** — keluar dari aplikasi
+
+### Task Management (per user, butuh login)
+- Lihat daftar task
+- Tambah task baru
+- Edit task
+- Hapus task
+- Tandai selesai / belum selesai
+
+### Dashboard
+- Total task
+- Jumlah task selesai vs belum
+- Task terbaru
+- Ringkasan per kategori
+
+### Kategori
+- Buat kategori (Work, Personal, Study, dll.)
+- Assign kategori ke task
+- Filter task berdasarkan kategori
 
 ---
 
 ## Milestone per Modul
 
-| Modul | State project | Bisa diakses di browser |
+| Modul | Apa yang ditambahkan | Hasil di browser |
 |---|---|---|
-| 01 | Laravel fresh install | Halaman welcome |
-| 02 | Repo di GitHub | (sama, sudah di GitHub) |
-| 03 | Route + controller | `/`, `/tentang` |
-| 04 | Layout Blade | Halaman dengan navbar |
-| 05 | Database | `/tasks` — list dari DB |
-| 06 | CRUD | Tambah, edit, hapus task |
-| 07 | Auth | Harus login untuk akses tasks |
-| 08 | Polish | Dashboard, kategori, search |
+| 01 | Install Laravel + MySQL | Halaman welcome Laravel |
+| 02 | Push ke GitHub | Project ada di GitHub |
+| 03 | Route + Controller | `/` dan `/tentang` jalan |
+| 04 | Layout Blade + Bootstrap CDN | Halaman rapi dengan navbar |
+| 05 | Migration + Model + Seeder | `/tasks` tampil data dari DB |
+| 06 | CRUD lengkap | Bisa tambah/edit/hapus task |
+| 07 | Login + Register manual | Harus login untuk akses tasks |
+| 08 | Dashboard + Kategori + Search | App siap demo |
 
 ---
 
 ## Struktur Database Akhir
 
-```
-users
-├── id
-├── name
-├── email
-├── password
-└── timestamps
+### Tabel `users` (bawaan Laravel)
 
-categories
-├── id
-├── name
-├── user_id (FK)
-└── timestamps
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| id | BIGINT | Primary key |
+| name | VARCHAR | Nama user |
+| email | VARCHAR | Email (unik) |
+| password | VARCHAR | Password (di-hash) |
+| created_at | TIMESTAMP | Waktu dibuat |
+| updated_at | TIMESTAMP | Waktu diupdate |
 
-tasks
-├── id
-├── title
-├── description
-├── is_done
-├── category_id (FK, nullable)
-├── user_id (FK)
-└── timestamps
-```
+### Tabel `tasks`
 
-> Tabel `users` sudah ada bawaan Laravel. Tabel `categories` dan kolom relasi ditambahkan di modul 07–08.
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| id | BIGINT | Primary key |
+| user_id | BIGINT | FK ke users |
+| category_id | BIGINT (nullable) | FK ke categories |
+| title | VARCHAR | Judul task |
+| description | TEXT (nullable) | Deskripsi |
+| is_done | BOOLEAN | Status selesai |
+| created_at | TIMESTAMP | Waktu dibuat |
+| updated_at | TIMESTAMP | Waktu diupdate |
+
+### Tabel `categories`
+
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| id | BIGINT | Primary key |
+| user_id | BIGINT | FK ke users |
+| name | VARCHAR | Nama kategori |
+| color | VARCHAR | Warna badge |
+| created_at | TIMESTAMP | Waktu dibuat |
+| updated_at | TIMESTAMP | Waktu diupdate |
+
+> Tabel `users` sudah ada bawaan Laravel. Tabel `tasks` dibuat Modul 05, kolom `user_id` Modul 07, tabel `categories` Modul 08.
 
 ---
 
 ## Tech Stack
 
-| Layer | Teknologi |
-|---|---|
-| Backend | Laravel 12, PHP 8.2+ |
-| Database | MySQL 8 |
-| Frontend | Blade + Bootstrap 5 |
-| Auth | Laravel UI (Bootstrap) |
-| Version Control | Git + GitHub |
+| Layer | Teknologi | Catatan |
+|---|---|---|
+| Backend | Laravel 12, PHP 8.2+ | Framework utama |
+| Database | MySQL 8 | Satu-satunya database |
+| Frontend | Blade + Bootstrap 5 CDN | **Tidak pakai npm/Vite** |
+| Auth | Manual (Auth facade) | **Tidak pakai Laravel UI/Breeze** |
+| Version Control | Git + GitHub | Push langsung ke main |
 
 ---
 
 ## Nama Project
 
-Saat install di Modul 01, gunakan nama:
+Saat install di Modul 01:
 
 ```bash
 composer create-project laravel/laravel task-manager
 ```
 
-Folder `task-manager/` adalah project kamu untuk **semua modul**. Jangan buat project baru di modul berikutnya.
+Folder `task-manager/` dipakai untuk **semua modul**. Jangan buat project baru.
 
 ---
 
 ## Cara Menggunakan Manual Ini
 
-1. Baca modul overview ini
-2. Kerjakan modul 01 → 08 **berurutan**
-3. Setiap selesai modul → **commit & push** ke GitHub (Modul 02 ajarkan caranya)
+1. Baca modul ini sampai paham gambaran akhir
+2. Kerjakan modul **01 → 08** berurutan
+3. Setiap selesai modul → `git add .` → `git commit` → `git push`
 4. Centang checklist di akhir setiap modul
-5. Jika stuck, baca bagian Troubleshooting di modul tersebut
+5. Jika error, baca bagian Troubleshooting modul tersebut
+
+---
+
+## Struktur Folder Manual
+
+```
+manual-app/                  ← repo manual (dokumentasi)
+├── README.md
+├── 00-project-overview/
+├── 01-setup/
+├── ...
+└── 08-project-akhir/
+
+task-manager/                ← project Laravel kamu (dibuat di Modul 01)
+├── app/
+├── routes/
+├── resources/views/
+└── database/
+```
 
 ---
 
