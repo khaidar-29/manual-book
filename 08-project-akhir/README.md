@@ -184,38 +184,54 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 @section('title', 'Dashboard')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+    <h1 class="h2 fw-bold mb-4">Dashboard</h1>
 
-    <div class="grid grid-cols-3 gap-4 mb-8">
-        <div class="bg-white p-4 rounded-lg shadow-sm text-center">
-            <p class="text-3xl font-bold text-blue-600">{{ $total }}</p>
-            <p class="text-sm text-gray-500">Total Task</p>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <p class="display-6 fw-bold text-primary mb-0">{{ $total }}</p>
+                    <p class="text-muted small mb-0">Total Task</p>
+                </div>
+            </div>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm text-center">
-            <p class="text-3xl font-bold text-green-600">{{ $done }}</p>
-            <p class="text-sm text-gray-500">Selesai</p>
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <p class="display-6 fw-bold text-success mb-0">{{ $done }}</p>
+                    <p class="text-muted small mb-0">Selesai</p>
+                </div>
+            </div>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm text-center">
-            <p class="text-3xl font-bold text-yellow-600">{{ $pending }}</p>
-            <p class="text-sm text-gray-500">Belum Selesai</p>
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <p class="display-6 fw-bold text-warning mb-0">{{ $pending }}</p>
+                    <p class="text-muted small mb-0">Belum Selesai</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-6">
-        <div>
-            <h2 class="font-semibold mb-3">Task Terbaru</h2>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <h2 class="h5 fw-semibold mb-3">Task Terbaru</h2>
             @forelse($recentTasks as $task)
-                <div class="bg-white p-3 rounded border mb-2 text-sm">{{ $task->title }}</div>
+                <div class="card mb-2 shadow-sm">
+                    <div class="card-body py-2 small">{{ $task->title }}</div>
+                </div>
             @empty
-                <p class="text-gray-500 text-sm">Belum ada task.</p>
+                <p class="text-muted small">Belum ada task.</p>
             @endforelse
         </div>
-        <div>
-            <h2 class="font-semibold mb-3">Kategori</h2>
+        <div class="col-md-6">
+            <h2 class="h5 fw-semibold mb-3">Kategori</h2>
             @foreach($categories as $cat)
-                <div class="flex justify-between bg-white p-3 rounded border mb-2 text-sm">
-                    <span>{{ $cat->name }}</span>
-                    <span class="text-gray-500">{{ $cat->tasks_count }} task</span>
+                <div class="card mb-2 shadow-sm">
+                    <div class="card-body py-2 d-flex justify-content-between small">
+                        <span>{{ $cat->name }}</span>
+                        <span class="text-muted">{{ $cat->tasks_count }} task</span>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -256,23 +272,31 @@ public function index(Request $request)
 Tambah form filter di `tasks/index.blade.php`:
 
 ```blade
-<form method="GET" class="flex gap-3 mb-6">
-    <input type="text" name="search" value="{{ request('search') }}"
-           placeholder="Cari task..." class="border rounded px-3 py-2 text-sm">
-    <select name="category" class="border rounded px-3 py-2 text-sm">
-        <option value="">Semua Kategori</option>
-        @foreach($categories as $cat)
-            <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
-                {{ $cat->name }}
-            </option>
-        @endforeach
-    </select>
-    <select name="status" class="border rounded px-3 py-2 text-sm">
-        <option value="">Semua Status</option>
-        <option value="done" {{ request('status') === 'done' ? 'selected' : '' }}>Selesai</option>
-        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Belum</option>
-    </select>
-    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded text-sm">Filter</button>
+<form method="GET" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="search" value="{{ request('search') }}"
+               placeholder="Cari task..." class="form-control form-control-sm">
+    </div>
+    <div class="col-md-3">
+        <select name="category" class="form-select form-select-sm">
+            <option value="">Semua Kategori</option>
+            @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                    {{ $cat->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="status" class="form-select form-select-sm">
+            <option value="">Semua Status</option>
+            <option value="done" {{ request('status') === 'done' ? 'selected' : '' }}>Selesai</option>
+            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Belum</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-dark btn-sm w-100">Filter</button>
+    </div>
 </form>
 ```
 
@@ -307,18 +331,19 @@ Aplikasi manajemen task — project belajar Laravel.
 
 ## Tech Stack
 - Laravel 12, PHP 8.2+
-- Blade + Tailwind CSS
-- SQLite / MySQL
-- Laravel Breeze
+- Blade + Bootstrap 5
+- MySQL 8
+- Laravel UI (Auth)
 
 ## Cara Menjalankan
 \`\`\`bash
 composer install
 cp .env.example .env
 php artisan key:generate
-touch database/database.sqlite
+# Edit .env — set DB_DATABASE, DB_USERNAME, DB_PASSWORD
+# Buat database: CREATE DATABASE task_manager;
 php artisan migrate --seed
-npm install && npm run dev
+npm install && npm run build   # untuk auth (Modul 07+)
 php artisan serve
 \`\`\`
 
@@ -389,7 +414,7 @@ Kamu sudah menyelesaikan **Task Manager App** — project Laravel lengkap dari n
 | 01 | Laravel setup |
 | 02 | Git & GitHub |
 | 03 | Routing & controller |
-| 04 | Blade template |
+| 04 | Blade + Bootstrap |
 | 05 | Database |
 | 06 | CRUD task |
 | 07 | Authentication |

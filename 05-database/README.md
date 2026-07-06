@@ -165,24 +165,25 @@ class TaskController extends Controller
 @section('title', 'Daftar Task')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">Daftar Task</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">Daftar Task</h1>
+    </div>
 
     @if($tasks->isEmpty())
-        <p class="text-gray-500">Belum ada task.</p>
+        <p class="text-muted">Belum ada task.</p>
     @else
-        <div class="space-y-3">
+        <div class="list-group">
             @foreach($tasks as $task)
-                <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-start">
+                <div class="list-group-item d-flex justify-content-between align-items-start">
                     <div>
-                        <h2 class="font-semibold {{ $task->is_done ? 'line-through text-gray-400' : '' }}">
+                        <h5 class="mb-1 {{ $task->is_done ? 'text-decoration-line-through text-muted' : '' }}">
                             {{ $task->title }}
-                        </h2>
+                        </h5>
                         @if($task->description)
-                            <p class="text-sm text-gray-500 mt-1">{{ $task->description }}</p>
+                            <p class="mb-0 small text-muted">{{ $task->description }}</p>
                         @endif
                     </div>
-                    <span class="text-xs px-2 py-1 rounded shrink-0 ml-4
-                        {{ $task->is_done ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                    <span class="badge {{ $task->is_done ? 'bg-success' : 'bg-warning text-dark' }}">
                         {{ $task->is_done ? 'Selesai' : 'Belum' }}
                     </span>
                 </div>
@@ -203,7 +204,7 @@ Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 **Navbar** — tambah link:
 
 ```blade
-<a href="{{ route('tasks.index') }}">Tasks</a>
+<a class="nav-link" href="{{ route('tasks.index') }}">Tasks</a>
 ```
 
 ---

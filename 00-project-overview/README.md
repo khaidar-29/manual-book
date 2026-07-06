@@ -96,9 +96,9 @@ tasks
 | Layer | Teknologi |
 |---|---|
 | Backend | Laravel 12, PHP 8.2+ |
-| Database | SQLite (dev) / MySQL (production) |
-| Frontend | Blade + Tailwind CSS |
-| Auth | Laravel Breeze |
+| Database | MySQL 8 |
+| Frontend | Blade + Bootstrap 5 |
+| Auth | Laravel UI (Bootstrap) |
 | Version Control | Git + GitHub |
 
 ---

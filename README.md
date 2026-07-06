@@ -28,7 +28,7 @@ Kerjakan **berurutan**. Jangan loncat modul.
 | 01 | [Setup](./01-setup/README.md) | Install Laravel, project jalan | 1 hari |
 | 02 | [Git & GitHub](./02-git-github/README.md) | Version control, push ke GitHub | 1 hari |
 | 03 | [Routing & Controller](./03-routing-controller/README.md) | Route, controller, kirim data | 1–2 hari |
-| 04 | [Blade Template](./04-blade-template/README.md) | Layout, navbar, sintaks Blade | 1–2 hari |
+| 04 | [Blade + Bootstrap](./04-blade-template/README.md) | Layout, navbar, Bootstrap 5 | 1–2 hari |
 | 05 | [Database](./05-database/README.md) | Migration, model, seeder, list task | 2 hari |
 | 06 | [CRUD Task](./06-crud-task/README.md) | Tambah, edit, hapus, validasi | 2–3 hari |
 | 07 | [Authentication](./07-authentication/README.md) | Login, register, proteksi route | 2 hari |
@@ -47,7 +47,7 @@ Modul 02   Repo GitHub + push pertama
     ↓
 Modul 03   + Route & controller (halaman tentang)
     ↓ commit & push
-Modul 04   + Layout Blade & navbar
+Modul 04   + Layout Blade + Bootstrap
     ↓ commit & push
 Modul 05   + Tabel tasks, list dari database
     ↓ commit & push
@@ -67,15 +67,15 @@ Modul 08   + Dashboard, kategori, search
 |---|---|
 | PHP | 8.2+ |
 | Composer | 2.x |
-| Node.js & NPM | 18+ |
+| MySQL | 8.x |
+| Node.js & NPM | 18+ (Modul 07+) |
 | Git | Terbaru |
-| MySQL / SQLite | Untuk database |
 | Akun GitHub | Untuk push project |
 
 Cek versi:
 
 ```bash
-php -v && composer -V && node -v && git --version
+php -v && composer -V && mysql --version && git --version
 ```
 
 ---
@@ -86,10 +86,10 @@ Gunakan format ini di setiap modul:
 
 ```
 feat: tambah halaman tentang
-feat: buat layout blade dan navbar
+feat: buat layout blade dengan bootstrap
 feat: tampilkan list task dari database
 feat: crud task lengkap dengan validasi
-feat: authentication dengan laravel breeze
+feat: authentication dengan laravel ui bootstrap
 feat: dashboard dan kategori task
 ```
 
@@ -107,9 +107,9 @@ feat: dashboard dan kategori task
 
 | Masalah | Solusi |
 |---|---|
-| `could not find driver` | Install extension `pdo_sqlite` atau `pdo_mysql` |
+| `could not find driver` | Install extension `pdo_mysql` |
+| `SQLSTATE[HY000] [1045] Access denied` | Cek `DB_USERNAME` & `DB_PASSWORD` di `.env` |
 | `No application encryption key` | `php artisan key:generate` |
-| `Vite manifest not found` | `npm install && npm run dev` |
 | Git push ditolak | Cek remote URL & login GitHub |
 | Port 8000 sudah dipakai | `php artisan serve --port=8080` |
 

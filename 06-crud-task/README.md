@@ -125,28 +125,62 @@ php artisan route:list --name=tasks
 
 ## Langkah 3: Update View Index
 
-Tambah tombol tambah, link edit/hapus, pagination di `tasks/index.blade.php`:
+**`resources/views/tasks/index.blade.php`:**
 
 ```blade
+@extends('layouts.app')
+
+@section('title', 'Daftar Task')
+
 @section('content')
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold">Daftar Task</h1>
-        <a href="{{ route('tasks.create') }}"
-           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
-            + Tambah Task
-        </a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">Daftar Task</h1>
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary btn-sm">+ Tambah Task</a>
     </div>
 
-    {{-- loop task seperti modul 05, tambah kolom aksi: --}}
-    <a href="{{ route('tasks.edit', $task) }}" class="text-yellow-600 text-sm">Edit</a>
-    <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="inline"
-          onsubmit="return confirm('Yakin hapus?')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="text-red-600 text-sm">Hapus</button>
-    </form>
-
-    <div class="mt-4">{{ $tasks->links() }}</div>
+    @if($tasks->isEmpty())
+        <p class="text-muted">Belum ada task.
+            <a href="{{ route('tasks.create') }}">Tambah sekarang</a>
+        </p>
+    @else
+        <div class="table-responsive">
+            <table class="table table-striped table-hover bg-white">
+                <thead class="table-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($tasks as $index => $task)
+                        <tr>
+                            <td>{{ $tasks->firstItem() + $index }}</td>
+                            <td>
+                                <a href="{{ route('tasks.show', $task) }}">{{ $task->title }}</a>
+                            </td>
+                            <td>
+                                <span class="badge {{ $task->is_done ? 'bg-success' : 'bg-warning text-dark' }}">
+                                    {{ $task->is_done ? 'Selesai' : 'Belum' }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ route('tasks.edit', $task) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="d-inline"
+                                      onsubmit="return confirm('Yakin hapus?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-3">{{ $tasks->links() }}</div>
+    @endif
 @endsection
 ```
 
@@ -162,35 +196,37 @@ Tambah tombol tambah, link edit/hapus, pagination di `tasks/index.blade.php`:
 @section('title', 'Tambah Task')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">Tambah Task</h1>
+    <h1 class="h2 fw-bold mb-4">Tambah Task</h1>
 
-    <form action="{{ route('tasks.store') }}" method="POST"
-          class="bg-white rounded-lg shadow-sm p-6 space-y-4">
-        @csrf
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="{{ route('tasks.store') }}" method="POST">
+                @csrf
 
-        <div>
-            <label class="block text-sm font-medium mb-1">Judul <span class="text-red-500">*</span></label>
-            <input type="text" name="title" value="{{ old('title') }}"
-                   class="w-full border rounded px-3 py-2 @error('title') border-red-500 @enderror">
-            @error('title')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                <div class="mb-3">
+                    <label class="form-label">Judul <span class="text-danger">*</span></label>
+                    <input type="text" name="title" value="{{ old('title') }}"
+                           class="form-control @error('title') is-invalid @enderror">
+                    @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Deskripsi</label>
+                    <textarea name="description" rows="3" class="form-control">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="is_done" value="1" id="is_done" class="form-check-input">
+                    <label for="is_done" class="form-check-label">Sudah selesai</label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">Batal</a>
+                </div>
+            </form>
         </div>
-
-        <div>
-            <label class="block text-sm font-medium mb-1">Deskripsi</label>
-            <textarea name="description" rows="3"
-                      class="w-full border rounded px-3 py-2">{{ old('description') }}</textarea>
-        </div>
-
-        <div class="flex items-center gap-2">
-            <input type="checkbox" name="is_done" value="1" id="is_done">
-            <label for="is_done">Sudah selesai</label>
-        </div>
-
-        <div class="flex gap-3">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
-            <a href="{{ route('tasks.index') }}" class="px-4 py-2 border rounded">Batal</a>
-        </div>
-    </form>
+    </div>
 @endsection
 ```
 
@@ -212,21 +248,22 @@ Tambah tombol tambah, link edit/hapus, pagination di `tasks/index.blade.php`:
 @section('title', $task->title)
 
 @section('content')
-    <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex justify-between items-start mb-4">
-            <h1 class="text-2xl font-bold">{{ $task->title }}</h1>
-            <span class="text-xs px-2 py-1 rounded
-                {{ $task->is_done ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                {{ $task->is_done ? 'Selesai' : 'Belum' }}
-            </span>
-        </div>
-        @if($task->description)
-            <p class="text-gray-600 mb-4">{{ $task->description }}</p>
-        @endif
-        <p class="text-sm text-gray-400 mb-6">Dibuat: {{ $task->created_at->format('d M Y H:i') }}</p>
-        <div class="flex gap-3">
-            <a href="{{ route('tasks.edit', $task) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">Edit</a>
-            <a href="{{ route('tasks.index') }}" class="px-4 py-2 border rounded">Kembali</a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h1 class="h2 fw-bold mb-0">{{ $task->title }}</h1>
+                <span class="badge {{ $task->is_done ? 'bg-success' : 'bg-warning text-dark' }}">
+                    {{ $task->is_done ? 'Selesai' : 'Belum' }}
+                </span>
+            </div>
+            @if($task->description)
+                <p class="text-muted">{{ $task->description }}</p>
+            @endif
+            <p class="small text-muted mb-4">Dibuat: {{ $task->created_at->format('d M Y H:i') }}</p>
+            <div class="d-flex gap-2">
+                <a href="{{ route('tasks.edit', $task) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">Kembali</a>
+            </div>
         </div>
     </div>
 @endsection

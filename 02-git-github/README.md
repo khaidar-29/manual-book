@@ -163,8 +163,8 @@ Aplikasi manajemen task — project belajar Laravel.
 
 ## Tech Stack
 - Laravel 12
-- Blade + Tailwind CSS
-- SQLite / MySQL
+- Blade + Bootstrap 5
+- MySQL
 ```
 
 5. Commit & push:

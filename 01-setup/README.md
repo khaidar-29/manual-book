@@ -9,9 +9,9 @@ Membuat project **Task Manager** dan menjalankannya di local.
 
 ## Tujuan Modul
 
-- [ ] Software terinstall (PHP, Composer, Node, Git)
+- [ ] Software terinstall (PHP, Composer, MySQL, Git)
 - [ ] Project `task-manager` dibuat
-- [ ] Database & `.env` dikonfigurasi
+- [ ] Database MySQL & `.env` dikonfigurasi
 - [ ] Server jalan di browser
 - [ ] Git di-init + commit pertama
 
@@ -22,20 +22,47 @@ Membuat project **Task Manager** dan menjalankannya di local.
 ```bash
 php -v          # Minimal 8.2
 composer -V
-node -v
-npm -v
+mysql --version
 git --version
 ```
 
 ### Install cepat
 
-**macOS:** `brew install php composer node git mysql`  
-**Windows:** [Laragon](https://laragon.org)  
-**Linux:** `sudo apt install php8.2 php8.2-sqlite3 php8.2-mbstring composer nodejs npm git`
+**macOS:**
+```bash
+brew install php composer mysql git
+brew services start mysql
+```
+
+**Windows:** [Laragon](https://laragon.org) — sudah include PHP, MySQL, Composer
+
+**Linux:**
+```bash
+sudo apt install php8.2 php8.2-mysql php8.2-mbstring php8.2-xml php8.2-curl composer mysql-server git
+```
+
+### Extension PHP wajib
+
+```bash
+php -m | grep pdo_mysql
+```
 
 ---
 
-## Langkah 2: Buat Project Laravel
+## Langkah 2: Buat Database MySQL
+
+```bash
+mysql -u root -p
+```
+
+```sql
+CREATE DATABASE task_manager;
+EXIT;
+```
+
+---
+
+## Langkah 3: Buat Project Laravel
 
 ```bash
 cd ~/projects   # atau folder kerja kamu
@@ -46,7 +73,7 @@ cd task-manager
 
 ---
 
-## Langkah 3: Konfigurasi Environment
+## Langkah 4: Konfigurasi Environment
 
 ```bash
 cp .env.example .env
@@ -59,41 +86,30 @@ Edit `.env`:
 APP_NAME="Task Manager"
 APP_URL=http://localhost:8000
 
-# SQLite (paling mudah untuk belajar)
-DB_CONNECTION=sqlite
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=task_manager
+DB_USERNAME=root
+DB_PASSWORD=        # isi password MySQL kamu
 ```
-
-Buat file database:
-
-```bash
-touch database/database.sqlite
-```
-
-> **Alternatif MySQL:** set `DB_CONNECTION=mysql`, buat database `task_manager`, isi `DB_USERNAME` dan `DB_PASSWORD`.
 
 ---
 
-## Langkah 4: Migration & Server
+## Langkah 5: Migration & Server
 
 ```bash
 php artisan migrate
-```
-
-Buka **dua terminal**:
-
-```bash
-# Terminal 1
 php artisan serve
-
-# Terminal 2
-npm install && npm run dev
 ```
 
 Buka **http://localhost:8000** — halaman welcome Laravel harus tampil.
 
+> **Catatan:** Manual ini pakai **Bootstrap 5 via CDN** untuk styling. Tidak perlu `npm run dev` sampai Modul 07 (authentication).
+
 ---
 
-## Langkah 5: Kenalan Struktur Folder
+## Langkah 6: Kenalan Struktur Folder
 
 ```
 task-manager/
@@ -108,7 +124,7 @@ task-manager/
 
 ---
 
-## Langkah 6: Git Init + Commit Pertama
+## Langkah 7: Git Init + Commit Pertama
 
 ```bash
 git init
@@ -133,17 +149,19 @@ git commit -m "chore: initial laravel setup"
 
 | Error | Solusi |
 |---|---|
-| `could not find driver` | Install `pdo_sqlite` atau `pdo_mysql` |
+| `could not find driver` | Install extension `pdo_mysql` |
+| `SQLSTATE[HY000] [1045] Access denied` | Cek `DB_USERNAME` & `DB_PASSWORD` di `.env` |
+| `Unknown database 'task_manager'` | Buat database di MySQL dulu |
 | `No application encryption key` | `php artisan key:generate` |
-| `Vite manifest not found` | `npm install && npm run dev` |
 
 ---
 
 ## Checklist Selesai
 
 - [ ] Project `task-manager` dibuat
+- [ ] Database MySQL `task_manager` dibuat
 - [ ] `.env` dikonfigurasi, migrate berhasil
-- [ ] `php artisan serve` + `npm run dev` jalan
+- [ ] `php artisan serve` jalan
 - [ ] Halaman welcome tampil di browser
 - [ ] `git init` + commit pertama selesai
 

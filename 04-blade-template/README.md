@@ -1,6 +1,6 @@
-# Modul 04 — Blade Template
+# Modul 04 — Blade Template + Bootstrap
 
-Merapikan tampilan **Task Manager** dengan layout Blade, navbar, dan partial.
+Merapikan tampilan **Task Manager** dengan layout Blade dan **Bootstrap 5**.
 
 **Estimasi waktu:** 1–2 hari  
 **Prasyarat:** [Modul 03 — Routing & Controller](../03-routing-controller/README.md)
@@ -11,24 +11,24 @@ Merapikan tampilan **Task Manager** dengan layout Blade, navbar, dan partial.
 
 - [ ] Layout master dengan `@extends` & `@yield`
 - [ ] Navbar partial dengan `@include`
+- [ ] Styling pakai **Bootstrap 5** (via CDN)
 - [ ] Semua halaman pakai layout yang sama
-- [ ] Paham sintaks Blade dasar
 - [ ] Commit & push ke GitHub
 
 **Yang ditambahkan ke project:**
 
 ```
 resources/views/
-├── layouts/app.blade.php
+├── layouts/app.blade.php      ← layout + Bootstrap CDN
 ├── partials/navbar.blade.php
 ├── partials/alert.blade.php
-├── home.blade.php      ← refactor pakai layout
-└── about.blade.php     ← refactor pakai layout
+├── home.blade.php             ← refactor pakai layout
+└── about.blade.php            ← refactor pakai layout
 ```
 
 ---
 
-## Langkah 1: Layout Master
+## Langkah 1: Layout Master (Bootstrap 5)
 
 **`resources/views/layouts/app.blade.php`:**
 
@@ -39,22 +39,26 @@ resources/views/
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Task Manager')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-light d-flex flex-column min-vh-100">
     @include('partials.navbar')
 
-    <main class="flex-1 max-w-4xl mx-auto w-full p-6">
+    <main class="container py-4 flex-grow-1">
         @include('partials.alert')
         @yield('content')
     </main>
 
-    <footer class="text-center text-sm text-gray-500 py-6 border-t">
+    <footer class="text-center text-muted py-3 border-top">
         &copy; {{ date('Y') }} Task Manager — Built with Laravel
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 ```
+
+> Bootstrap di-load via **CDN** — tidak perlu npm/Vite untuk modul ini.
 
 ---
 
@@ -63,20 +67,14 @@ resources/views/
 **`resources/views/partials/navbar.blade.php`:**
 
 ```blade
-<nav class="bg-white shadow-sm border-b">
-    <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="{{ route('home') }}" class="text-lg font-bold text-blue-600">
-            Task Manager
-        </a>
-        <div class="flex gap-6 text-sm">
-            <a href="{{ route('home') }}"
-               class="hover:text-blue-600 {{ request()->routeIs('home') ? 'text-blue-600 font-semibold' : '' }}">
-                Beranda
-            </a>
-            <a href="{{ route('about') }}"
-               class="hover:text-blue-600 {{ request()->routeIs('about') ? 'text-blue-600 font-semibold' : '' }}">
-                Tentang
-            </a>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" href="{{ route('home') }}">Task Manager</a>
+        <div class="navbar-nav ms-auto gap-2">
+            <a class="nav-link {{ request()->routeIs('home') ? 'active fw-semibold' : '' }}"
+               href="{{ route('home') }}">Beranda</a>
+            <a class="nav-link {{ request()->routeIs('about') ? 'active fw-semibold' : '' }}"
+               href="{{ route('about') }}">Tentang</a>
         </div>
     </div>
 </nav>
@@ -90,19 +88,19 @@ resources/views/
 
 ```blade
 @if(session('success'))
-    <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded mb-4">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
 
 @if(session('error'))
-    <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded mb-4">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
 ```
-
-> Partial ini akan dipakai di Modul 06 (CRUD) untuk notifikasi sukses/error.
 
 ---
 
@@ -116,13 +114,10 @@ resources/views/
 @section('title', $title)
 
 @section('content')
-    <div class="text-center py-12">
-        <h1 class="text-4xl font-bold mb-4">{{ $title }}</h1>
-        <p class="text-gray-600 text-lg mb-8">{{ $tagline }}</p>
-        <a href="{{ route('about') }}"
-           class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-            Pelajari Lebih Lanjut
-        </a>
+    <div class="text-center py-5">
+        <h1 class="display-5 fw-bold mb-3">{{ $title }}</h1>
+        <p class="lead text-muted mb-4">{{ $tagline }}</p>
+        <a href="{{ route('about') }}" class="btn btn-primary">Pelajari Lebih Lanjut</a>
     </div>
 @endsection
 ```
@@ -135,14 +130,33 @@ resources/views/
 @section('title', $title)
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">{{ $title }}</h1>
-    <div class="bg-white rounded-lg shadow-sm p-6 space-y-3">
-        <p><strong>Aplikasi:</strong> {{ $appName }}</p>
-        <p><strong>Versi:</strong> {{ $version }}</p>
-        <p class="text-gray-600">{{ $description }}</p>
+    <h1 class="h2 fw-bold mb-4">{{ $title }}</h1>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>Aplikasi:</strong> {{ $appName }}</p>
+            <p><strong>Versi:</strong> {{ $version }}</p>
+            <p class="text-muted mb-0">{{ $description }}</p>
+        </div>
     </div>
 @endsection
 ```
+
+---
+
+## Class Bootstrap yang Sering Dipakai
+
+| Class | Fungsi |
+|---|---|
+| `container` | Wrapper lebar tetap |
+| `btn btn-primary` | Tombol biru |
+| `btn btn-danger` | Tombol merah (hapus) |
+| `card`, `card-body` | Kotak konten |
+| `table table-striped` | Tabel bergaris |
+| `form-control` | Input form |
+| `alert alert-success` | Notifikasi sukses |
+| `badge bg-success` | Label hijau |
+| `d-flex`, `justify-content-between` | Flexbox layout |
+| `mb-3`, `py-4` | Margin & padding |
 
 ---
 
@@ -152,38 +166,30 @@ resources/views/
 |---|---|
 | `{{ $var }}` | Output variabel (auto-escape) |
 | `@extends('layouts.app')` | Pakai layout induk |
-| `@section('content')` / `@endsection` | Definisi section |
+| `@section('content')` | Definisi section |
 | `@yield('content')` | Tempat section ditampilkan |
 | `@include('partials.navbar')` | Sisipkan partial |
-| `@if` / `@else` / `@endif` | Kondisi |
-| `@foreach` / `@endforeach` | Loop |
-| `@csrf` | Token keamanan form (Modul 06) |
-| `{{ route('home') }}` | Generate URL dari named route |
-| `{{ old('field') }}` | Nilai input sebelumnya setelah validasi gagal |
+| `@if` / `@foreach` | Kondisi & loop |
+| `@csrf` | Token keamanan form |
 
 ---
 
 ## Latihan Modul 04
 
-1. Tambah halaman `/kontak` dengan layout yang sama
+1. Tambah halaman `/kontak` dengan layout Bootstrap yang sama
 2. Tambah link Kontak di navbar
 3. Buat partial `partials/card.blade.php`:
 
 ```blade
-<div class="bg-white rounded-lg shadow-sm p-6">
-    <h2 class="font-semibold text-lg mb-2">{{ $title }}</h2>
-    <p class="text-gray-600">{{ $body }}</p>
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ $title }}</h5>
+        <p class="card-text text-muted">{{ $body }}</p>
+    </div>
 </div>
 ```
 
-4. Pakai `@include('partials.card', ['title' => '...', 'body' => '...'])` di halaman about
-5. Tampilkan 3 fitur app di beranda pakai loop `@foreach`:
-
-```php
-// Di HomeController
-$features = ['Kelola Task', 'Tandai Selesai', 'Filter Kategori'];
-return view('home', compact('title', 'tagline', 'features'));
-```
+4. Tampilkan 3 fitur app di beranda pakai `@foreach` + `list-group`
 
 ---
 
@@ -194,7 +200,7 @@ git checkout main && git pull origin main
 git checkout -b modul/04-blade-template
 
 git add .
-git commit -m "feat: tambah layout blade, navbar, dan refactor halaman"
+git commit -m "feat: tambah layout blade dengan bootstrap dan navbar"
 git push -u origin modul/04-blade-template
 ```
 
@@ -202,10 +208,10 @@ git push -u origin modul/04-blade-template
 
 ## Checklist Selesai
 
-- [ ] Layout `layouts/app.blade.php` dibuat
+- [ ] Layout dengan Bootstrap CDN dibuat
 - [ ] Navbar & alert partial berfungsi
 - [ ] Home & about pakai `@extends`
-- [ ] Link navbar highlight halaman aktif
+- [ ] Tampilan rapi dengan class Bootstrap
 - [ ] Commit & push ke GitHub
 
 ---
