@@ -1,72 +1,48 @@
 # Modul 01 — Setup & Instalasi
 
-Modul pertama: menyiapkan environment dan menjalankan project Laravel pertama kali.
+Membuat project **Task Manager** dan menjalankannya di local.
 
-**Estimasi waktu:** 1–2 hari  
-**Prasyarat:** Tidak ada
+**Estimasi waktu:** 1 hari  
+**Prasyarat:** [Modul 00 — Project Overview](../00-project-overview/README.md)
 
 ---
 
-## Tujuan Pembelajaran
+## Tujuan Modul
 
-Setelah menyelesaikan modul ini, kamu sudah bisa:
-
-- [ ] Mengecek dan menginstall software yang dibutuhkan
-- [ ] Membuat project Laravel baru
-- [ ] Mengkonfigurasi file `.env`
-- [ ] Menjalankan development server
-- [ ] Memahami struktur folder dasar Laravel
+- [ ] Software terinstall (PHP, Composer, Node, Git)
+- [ ] Project `task-manager` dibuat
+- [ ] Database & `.env` dikonfigurasi
+- [ ] Server jalan di browser
+- [ ] Git di-init + commit pertama
 
 ---
 
 ## Langkah 1: Cek Software
 
-Jalankan perintah berikut di terminal:
-
 ```bash
-php -v          # Minimal PHP 8.2
-composer -V     # Minimal Composer 2.x
-node -v         # Minimal Node.js 18
+php -v          # Minimal 8.2
+composer -V
+node -v
 npm -v
-mysql --version # Atau gunakan SQLite untuk latihan
 git --version
 ```
 
-### Extension PHP yang wajib aktif
+### Install cepat
 
-```bash
-php -m | grep -E 'pdo|mbstring|openssl|tokenizer|xml|ctype|json|bcmath|fileinfo'
-```
-
-Jika ada yang belum terinstall, install dulu sebelum lanjut.
-
-### Install cepat (macOS)
-
-```bash
-brew install php composer node mysql
-brew services start mysql
-```
-
-### Install cepat (Windows)
-
-Download **Laragon** dari [laragon.org](https://laragon.org) — sudah include PHP, MySQL, Composer, dan Node.js.
+**macOS:** `brew install php composer node git mysql`  
+**Windows:** [Laragon](https://laragon.org)  
+**Linux:** `sudo apt install php8.2 php8.2-sqlite3 php8.2-mbstring composer nodejs npm git`
 
 ---
 
 ## Langkah 2: Buat Project Laravel
 
 ```bash
-# Pindah ke folder kerja kamu
-cd ~/projects
+cd ~/projects   # atau folder kerja kamu
 
-# Buat project baru
-composer create-project laravel/laravel belajar-laravel
-
-# Masuk ke folder project
-cd belajar-laravel
+composer create-project laravel/laravel task-manager
+cd task-manager
 ```
-
-Tunggu sampai proses download selesai. Folder `belajar-laravel` adalah project kamu untuk semua modul berikutnya.
 
 ---
 
@@ -77,104 +53,79 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Buka file `.env` dan sesuaikan:
+Edit `.env`:
 
 ```env
-APP_NAME="Belajar Laravel"
-APP_ENV=local
-APP_DEBUG=true
+APP_NAME="Task Manager"
 APP_URL=http://localhost:8000
 
-# Opsi A: SQLite (paling mudah untuk latihan)
+# SQLite (paling mudah untuk belajar)
 DB_CONNECTION=sqlite
-# DB_DATABASE akan otomatis pakai database/database.sqlite
-
-# Opsi B: MySQL
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# DB_DATABASE=belajar_laravel
-# DB_USERNAME=root
-# DB_PASSWORD=
 ```
 
-### Jika pakai SQLite
+Buat file database:
 
 ```bash
 touch database/database.sqlite
 ```
 
-### Jika pakai MySQL
-
-```bash
-mysql -u root -p
-```
-
-```sql
-CREATE DATABASE belajar_laravel;
-EXIT;
-```
+> **Alternatif MySQL:** set `DB_CONNECTION=mysql`, buat database `task_manager`, isi `DB_USERNAME` dan `DB_PASSWORD`.
 
 ---
 
-## Langkah 4: Jalankan Migration
+## Langkah 4: Migration & Server
 
 ```bash
 php artisan migrate
 ```
 
-Jika berhasil, akan muncul pesan migration selesai. Ini artinya koneksi database sudah benar.
-
----
-
-## Langkah 5: Jalankan Development Server
-
 Buka **dua terminal**:
 
-**Terminal 1 — Laravel server:**
 ```bash
+# Terminal 1
 php artisan serve
+
+# Terminal 2
+npm install && npm run dev
 ```
 
-**Terminal 2 — Vite (asset CSS/JS):**
-```bash
-npm install
-npm run dev
-```
-
-Buka browser: **http://localhost:8000**
-
-Jika muncul halaman welcome Laravel, setup kamu sudah berhasil.
+Buka **http://localhost:8000** — halaman welcome Laravel harus tampil.
 
 ---
 
-## Langkah 6: Kenalan Struktur Folder
-
-Buka project di editor (VS Code / Cursor) dan perhatikan folder berikut:
+## Langkah 5: Kenalan Struktur Folder
 
 ```
-belajar-laravel/
+task-manager/
 ├── app/Http/Controllers/   ← Logika aplikasi
 ├── app/Models/             ← Model database
 ├── routes/web.php          ← Definisi URL
-├── resources/views/        ← File tampilan HTML
-├── database/migrations/    ← Struktur tabel database
+├── resources/views/        ← Tampilan HTML (Blade)
+├── database/migrations/    ← Struktur tabel
 ├── .env                    ← Konfigurasi (JANGAN di-commit!)
-└── artisan                 ← Command-line tool
+└── artisan                 ← CLI tool
 ```
 
-Cukup hafalkan 5 folder di atas dulu. Detailnya akan dipelajari di modul berikutnya.
+---
+
+## Langkah 6: Git Init + Commit Pertama
+
+```bash
+git init
+git add .
+git commit -m "chore: initial laravel setup"
+```
+
+> `.env` sudah otomatis di-ignore oleh `.gitignore` bawaan Laravel. Jangan pernah commit file `.env`.
 
 ---
 
 ## Latihan
 
-Kerjakan latihan berikut untuk memastikan setup berjalan:
-
-1. Jalankan `php artisan serve` dan buka `http://localhost:8000`
-2. Jalankan `php artisan route:list` — lihat daftar route yang ada
-3. Jalankan `php artisan tinker` lalu ketik `app()->version()` — cek versi Laravel
-4. Ubah `APP_NAME` di `.env`, refresh browser, lihat apakah nama berubah
+1. Jalankan `php artisan route:list` — lihat route bawaan Laravel
+2. Jalankan `php artisan tinker`, ketik `app()->version()` — cek versi
+3. Ubah `APP_NAME` di `.env`, refresh browser
+4. Pastikan `git status` bersih setelah commit
 
 ---
 
@@ -182,23 +133,21 @@ Kerjakan latihan berikut untuk memastikan setup berjalan:
 
 | Error | Solusi |
 |---|---|
-| `could not find driver` | Install extension `pdo_sqlite` atau `pdo_mysql` |
-| `No application encryption key` | Jalankan `php artisan key:generate` |
-| `SQLSTATE[HY000] [1045] Access denied` | Cek `DB_USERNAME` dan `DB_PASSWORD` di `.env` |
-| `Vite manifest not found` | Jalankan `npm install && npm run dev` |
-| Port 8000 sudah dipakai | `php artisan serve --port=8080` |
+| `could not find driver` | Install `pdo_sqlite` atau `pdo_mysql` |
+| `No application encryption key` | `php artisan key:generate` |
+| `Vite manifest not found` | `npm install && npm run dev` |
 
 ---
 
 ## Checklist Selesai
 
-- [ ] PHP, Composer, Node.js terinstall
-- [ ] Project Laravel berhasil dibuat
-- [ ] File `.env` sudah dikonfigurasi
-- [ ] `php artisan migrate` berhasil
-- [ ] `php artisan serve` + `npm run dev` berjalan
-- [ ] Halaman welcome Laravel tampil di browser
+- [ ] Project `task-manager` dibuat
+- [ ] `.env` dikonfigurasi, migrate berhasil
+- [ ] `php artisan serve` + `npm run dev` jalan
+- [ ] Halaman welcome tampil di browser
+- [ ] `git init` + commit pertama selesai
 
 ---
 
-**Modul berikutnya:** [02 — MVC Dasar](../02-mvc-dasar/README.md)
+**Modul sebelumnya:** [00 — Project Overview](../00-project-overview/README.md)  
+**Modul berikutnya:** [02 — Git & GitHub](../02-git-github/README.md)
