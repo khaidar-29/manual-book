@@ -1,0 +1,8 @@
+# Ignore OS / editor junk
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Contoh project Laravel — lokal saja, jangan push ke GitHub
+contoh-project/

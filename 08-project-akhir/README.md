@@ -1082,7 +1082,7 @@ Deploy app ke hosting PHP + MySQL (misalnya shared hosting, Railway, atau VPS):
 
 ---
 
-## Git — Final Commit & Push
+## Git — Commit & Push
 
 ```bash
 git add .
@@ -1090,15 +1090,15 @@ git commit -m "feat: dashboard kategori search filter dan readme project"
 git push
 ```
 
-Ini commit terakhir. Project Task Manager kamu sudah selesai!
+Fase 1 (Modul 01–08) selesai. Lanjutkan ke Fase 2 — mulai dari Modul 09.
 
 ---
 
-## Selamat!
+## Selamat — Fase 1 Selesai!
 
-Kamu sudah menyelesaikan **Task Manager App** — project Laravel lengkap dari nol sampai siap demo.
+Kamu sudah menyelesaikan fondasi **Task Manager App**: CRUD, auth, dashboard, kategori, search/filter.
 
-### Riwayat Perjalanan
+### Riwayat Perjalanan (Fase 1)
 
 | Modul | Milestone | Commit message contoh |
 |---|---|---|
@@ -1124,20 +1124,23 @@ Kamu sudah menyelesaikan **Task Manager App** — project Laravel lengkap dari n
 - Search, filter, pagination
 - Git workflow dasar
 
-### Lanjutan (Opsional)
+### Lanjutan — Modul Berikutnya (Wajib)
 
-| Topik | Deskripsi |
-|---|---|
-| File upload | Lampiran gambar/file di task |
-| Email notification | Reminder task deadline via Mail |
-| PHPUnit testing | Feature test CRUD & auth |
-| Laravel Sanctum | API JSON + SPA/mobile client |
-| Queue & Jobs | Background job untuk email |
-| Deploy production | VPS, Laravel Forge, atau Railway |
-| Policy & Gate | Authorization lebih granular |
-| Livewire / Alpine.js | Interaktivitas tanpa full SPA |
+Fase 1 selesai. **Jangan berhenti di sini** — lanjutkan ke Fase 2 secara berurutan.
+
+| Modul | Topik | Deskripsi |
+|---|---|---|
+| **09** | [Upload & Storage](../09-upload-storage/README.md) | Lampiran gambar/file di task |
+| 10 | Relasi Lanjutan | Tag many-to-many, soft delete |
+| 11 | Middleware & Authorization | Role admin, Policy |
+| 12 | Form Request & Refactor | Form Request, Service class |
+| 13–15 | API, Testing, Mail | Endpoint JSON, PHPUnit, email |
+| 16–17 | Deploy & Capstone | Production + review akhir |
+
+**Modul wajib berikutnya:** [09 — Upload & Storage](../09-upload-storage/README.md)
 
 ---
 
 **Modul sebelumnya:** [07 — Authentication](../07-authentication/README.md)  
+**Modul berikutnya:** [09 — Upload & Storage](../09-upload-storage/README.md)  
 **Kembali ke:** [Panduan Utama](../README.md)

@@ -57,7 +57,16 @@ Project ini **bukan** kumpulan latihan terpisah. Kamu membangun **satu aplikasi*
 | 05 | Migration + Model + Seeder | `/tasks` tampil data dari DB |
 | 06 | CRUD lengkap | Bisa tambah/edit/hapus task |
 | 07 | Login + Register manual | Harus login untuk akses tasks |
-| 08 | Dashboard + Kategori + Search | App siap demo |
+| 08 | Dashboard + Kategori + Search | App dasar siap demo |
+| 09 | Upload lampiran | File/gambar di task |
+| 10 | Tag + soft delete | Many-to-many & trash |
+| 11 | Role admin + Policy | Authorization |
+| 12 | Form Request + Service | Kode lebih rapi |
+| 13 | API Sanctum | Endpoint JSON |
+| 14 | Feature testing | `php artisan test` hijau |
+| 15 | Email notifikasi | Mailtrap inbox |
+| 16 | Deploy production | App live |
+| 17 | Capstone review | Portfolio siap demo |
 
 ---
 
@@ -129,7 +138,7 @@ Folder `task-manager/` dipakai untuk **semua modul**. Jangan buat project baru.
 ## Cara Menggunakan Manual Ini
 
 1. Baca modul ini sampai paham gambaran akhir
-2. Kerjakan modul **01 → 08** berurutan
+2. Kerjakan modul **01 → 17** berurutan (Fase 1 dulu, baru Fase 2–4)
 3. Setiap selesai modul → `git add .` → `git commit` → `git push`
 4. Centang checklist di akhir setiap modul
 5. Jika error, baca bagian Troubleshooting modul tersebut
@@ -153,6 +162,7 @@ task-manager/                ← project Laravel kamu (dibuat di Modul 01)
 └── database/
 ```
 
+> Folder `contoh-project/` (jika ada) hanya referensi lokal di komputer — diabaikan Git, tidak ikut ke GitHub.
 ---
 
 **Modul berikutnya:** [01 — Setup](../01-setup/README.md)
